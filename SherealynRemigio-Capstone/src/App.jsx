@@ -1,5 +1,6 @@
 import './App.css'
 import StockForm from './StockForm'
+import StockList from './StockList'
 
 function App() {
 
@@ -8,7 +9,7 @@ function App() {
       <h1>Finance Dashboard</h1>
       <StockForm />
       <h2>Stock List</h2>
-      <p>No stocks added yet.</p>
+      <StockList />
 
     </>
   )
