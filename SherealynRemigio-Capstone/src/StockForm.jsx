@@ -2,6 +2,24 @@ import { useContext, useState } from 'react';
 import './StockFormStyling.css'
 import StockContext from './contexts/StockContext';
 
+const fetchCurrentPrice = async (symbol, API_KEY) => {
+    try {
+        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
+        
+        const data = await response.json();
+
+        const quote = data['Global Quote'];
+
+        if (!quote || !quote['05. price']) {
+            return null;
+        }
+        return parseFloat(quote['05. price']);
+    }
+    catch (error) {
+        return null;
+    }
+}
+
 function StockForm() {
 
     const [stockSymbol, setStockSymbol] = useState('');
@@ -10,17 +28,29 @@ function StockForm() {
 
     const {addStock} = useContext(StockContext);
 
-    const API_KEY = "TWYWSN43NMC26OBT";
+    const API_KEY = "VEONLV84U8XAJK1U";
+
+    const resetForm = () => {
+        setStockSymbol('');
+        setQuantity('');
+        setPurchasePrice('');
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stockSymbol.toUpperCase()}&apikey=${API_KEY}`)
-        const data = await response.json();
+        if(!stockSymbol || !quantity || !purchasePrice) {
+            alert('Please fill in all fields');
+            return;
+        }
 
-        const quote = data['Global Quote'];
+        const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase(), API_KEY);
 
-        const currentPrice = parseFloat(quote['05. price']);
+        if (!currentPrice) {
+            alert('Invalid stock symbol');
+            resetForm();
+            return;
+        }
 
         const newStock = {
             symbol: stockSymbol.toUpperCase(),
@@ -30,11 +60,8 @@ function StockForm() {
         };
 
         addStock(newStock);
-
-        // Clear form
-        setStockSymbol('');
-        setQuantity('');
-        setPurchasePrice('');
+        resetForm();
+        
     }
 
     return (
