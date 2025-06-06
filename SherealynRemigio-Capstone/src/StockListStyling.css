@@ -1,12 +1,11 @@
 .stock-list {
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
-    padding: 24px;
-    background-color: #f9f9f9;
+    background-color: #f5faff;
     border-radius: 4px;
     border: 1px solid #ccc;
     overflow-x: auto;
+    padding: 0 14px;
 }
 
 .stock-list table {
@@ -16,7 +15,34 @@
 
 .stock-list table th,
 .stock-list table td {
-    padding: 20px;
+    padding: 18px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
 }
+
+.stock-list table th {
+    background-color: #0056b3;
+    color: white;
+}
+
+.stock-list table td {
+    color: #1f1f1f;
+}
+
+.stock-list table tbody tr:nth-child(even) {
+    background-color: white; 
+}
+
+.stock-list table tbody tr:nth-child(odd) {
+    background-color: #f5faff;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 16px;
+  }
+  th, td {
+    font-size: 0.8rem;
+  }
+}
+

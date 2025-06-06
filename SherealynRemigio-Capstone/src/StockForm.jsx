@@ -5,6 +5,7 @@ import StockContext from './contexts/StockContext';
 const fetchCurrentPrice = async (symbol, API_KEY) => {
     try {
         const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
+        
         const data = await response.json();
 
         const quote = data['Global Quote'];
@@ -27,7 +28,7 @@ function StockForm() {
 
     const {addStock} = useContext(StockContext);
 
-    const API_KEY = "TWYWSN43NMC26OBT";
+    const API_KEY = "VEONLV84U8XAJK1U";
 
     const resetForm = () => {
         setStockSymbol('');
@@ -40,7 +41,6 @@ function StockForm() {
 
         if(!stockSymbol || !quantity || !purchasePrice) {
             alert('Please fill in all fields');
-            resetForm();
             return;
         }
 

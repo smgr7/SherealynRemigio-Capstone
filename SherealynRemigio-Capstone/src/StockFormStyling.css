@@ -1,5 +1,5 @@
 button {
-  background-color: #007bff;
+  background-color: #0056b3;
   color: white;
   font-size: 16px;
   font-weight: 400;
@@ -9,7 +9,7 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #0066d4;
 }
 
 input {
@@ -32,6 +32,10 @@ form {
 }
 
 @media (max-width: 600px) {
+  body {
+    padding: 16px;
+  }
+
   form {
     display: flex;
     flex-direction: column;

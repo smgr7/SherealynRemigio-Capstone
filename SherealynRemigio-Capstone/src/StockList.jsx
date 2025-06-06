@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useCallback } from "react";
 import StockContext from "./contexts/StockContext";
 import './StockListStyling.css'
 
-const API_KEY = "TWYWSN43NMC26OBT";
+const API_KEY = "VEONLV84U8XAJK1U";
 
 const fetchCurrentPrice = async (symbol, API_KEY) => {
     try {
