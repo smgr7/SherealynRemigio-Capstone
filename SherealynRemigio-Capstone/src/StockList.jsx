@@ -1,12 +1,13 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import StockContext from "./contexts/StockContext";
-import './StockListStyling.css'
+// import './StockListStyling.css'
 
-const API_KEY = "VEONLV84U8XAJK1U";
+// const API_KEY = "VEONLV84U8XAJK1U";
 
-const fetchCurrentPrice = async (symbol, API_KEY) => {
+//const fetchCurrentPrice = async (symbol, API_KEY)
+const fetchCurrentPrice = async (symbol) => {
     try {
-        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
+        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`)
         const data = await response.json();
 
         const quote = data['Global Quote'];
@@ -30,7 +31,8 @@ function StockList() {
         const prices = {};
 
         for (const stock of stocks) {
-            const price = await fetchCurrentPrice(stock.symbol, API_KEY);
+            // const price = await fetchCurrentPrice(stock.symbol, API_KEY);
+            const price = await fetchCurrentPrice(stock.symbol);
             if (price) {
                 prices[stock.symbol] = price;
             }
@@ -43,42 +45,75 @@ function StockList() {
     }, [refreshPrices]);
 
     return (
-        <div className="stock-list">
+        <div className="flex flex-col bg-[#f5faff] rounded overflow-x-auto p8">
             {stocks.length === 0? (
-                <p>No stocks added yet.</p>
+                <p className="p-4">No stocks added yet.</p>
             ) : (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Stock Symbol</th>
-                            <th>Quantity</th>
-                            <th>Purchase Price</th>
-                            <th>Current Price</th>
-                            <th>Profit/Loss</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <>
+                    {/* Table for larger screens */}
+                    <div className="hidden sm:block overflow-x-auto">
+                        <table className="w-full border-collapse p-8">
+                            <thead>
+                                <tr className="bg-blue-600 text-white text-left">
+                                    <th className="p-4 text-sm sm:text-base">Stock Symbol</th>
+                                    <th className="p-4 text-sm sm:text-base">Quantity</th>
+                                    <th className="p-4 text-sm sm:text-base">Purchase Price</th>
+                                    <th className="p-4 text-sm sm:text-base">Current Price</th>
+                                    <th className="p-4 text-sm sm:text-base">Profit/Loss</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {stocks.map((stock, index) => {
+                                    const currentPrice = updatedPrices[stock.symbol] ?? stock.currentPrice;
+                                    const profitLoss = (currentPrice - stock.purchasePrice) * stock.quantity;
+                                        return (
+                                            <tr key={index}
+                                                className="odd:bg-blue-50 even:bg-white">
+                                                {/* <td style={{fontWeight: "bold"}}>{stock.symbol}</td> */}
+                                                <td className="p-4 font-bold border-b border-gray-200 text-grey-800 text-sm sm:text-base">{stock.symbol}</td>
+                                                <td className="p-4 border-b border-gray-200 text-grey-800 text-sm sm:text-base">{stock.quantity}</td>
+                                                <td className="p-4 border-b border-gray-200 text-grey-800 text-sm sm:text-base">${stock.purchasePrice.toFixed(2)}</td>
+                                                <td className="p-4 border-b border-gray-200 text-grey-800 text-sm sm:text-base">${currentPrice.toFixed(2)}</td>
+                                                <td className={`p-4 font-bold ${profitLoss >= 0 ? "text-green-600" : "text-red-600"}`}
+                                                >
+                                                {profitLoss >= 0 ? "+" : "-"}${Math.abs(profitLoss).toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Layout for smaller screens */}
+                    <div className="flex flex-col gap-4 sm:hidden bg-gray-800">
                         {stocks.map((stock, index) => {
                             const currentPrice = updatedPrices[stock.symbol] ?? stock.currentPrice;
                             const profitLoss = (currentPrice - stock.purchasePrice) * stock.quantity;
-                                return (
-                                    <tr key={index}>
-                                        <td style={{fontWeight: "bold"}}>{stock.symbol}</td>
-                                        <td>{stock.quantity}</td>
-                                        <td>${stock.purchasePrice.toFixed(2)}</td>
-                                        <td>${currentPrice.toFixed(2)}</td>
-                                        <td style={{
-                                            color: profitLoss >= 0 ? "green" : "red",
-                                            fontWeight: "bold",
-                                            }}
-                                        >
-                                        {profitLoss >= 0 ? "+" : "-"}${Math.abs(profitLoss).toFixed(2)}
-                                        </td>
-                                    </tr>
-                                )
+
+                            return (
+                                <div key={index} className="border rounded-lg p-4 bg-blue-50 shadow-sm">
+                                    <div className="mb-1 font-bold">
+                                        <span className="font-semibold">Stock Symbol:</span> {stock.symbol}
+                                    </div>
+                                    <div className="mb-1">
+                                        <span className="font-semibold">Quantity:</span> {stock.quantity}
+                                    </div>
+                                    <div className="mb-1">
+                                        <span className="font-semibold">Purchase Price:</span> ${stock.purchasePrice.toFixed(2)}
+                                    </div>
+                                    <div className="mb-1">
+                                        <span className="font-semibold">Current Price:</span> ${currentPrice.toFixed(2)}
+                                    </div>
+                                    <div className={`font-bold ${profitLoss >= 0 ? "text-green-600" : "text-red-600"}`}>
+                                        <span className="font-semibold text-gray-800">Profit/Loss:</span> {profitLoss >= 0 ? "+" : "-"}${Math.abs(profitLoss).toFixed(2)}
+                                    </div>
+                                </div>
+                            );
                         })}
-                    </tbody>
-                </table>
+                    </div>
+                </>
+                
             )}
         </div>
     )

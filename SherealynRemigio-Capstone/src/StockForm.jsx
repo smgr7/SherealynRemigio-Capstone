@@ -1,10 +1,11 @@
 import { useContext, useState } from 'react';
-import './StockFormStyling.css'
+// import './StockFormStyling.css'
 import StockContext from './contexts/StockContext';
 
-const fetchCurrentPrice = async (symbol, API_KEY) => {
+//const fetchCurrentPrice = async (symbol, API_KEY)
+const fetchCurrentPrice = async (symbol) => {
     try {
-        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
+        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`)
         
         const data = await response.json();
 
@@ -28,7 +29,7 @@ function StockForm() {
 
     const {addStock} = useContext(StockContext);
 
-    const API_KEY = "VEONLV84U8XAJK1U";
+    // const API_KEY = "VEONLV84U8XAJK1U";
 
     const resetForm = () => {
         setStockSymbol('');
@@ -44,7 +45,9 @@ function StockForm() {
             return;
         }
 
-        const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase(), API_KEY);
+        // const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase(), API_KEY);
+        const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase());
+
 
         if (!currentPrice) {
             alert('Invalid stock symbol');
@@ -66,20 +69,20 @@ function StockForm() {
 
     return (
     <>
-         <form onSubmit={handleSubmit}>
+         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-[20px] sm:gap-[10px] w-full sm:w-auto mx-auto">
             <label>
-                <input name='stockSymbol' type='text' placeholder='Stock Symbol' value={stockSymbol} onChange={(e) => setStockSymbol(e.target.value)}/>
+                <input name='stockSymbol' type='text' placeholder='Stock Symbol' value={stockSymbol} onChange={(e) => setStockSymbol(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base"/>
             </label>
 
             <label>
-                <input name='quantity' type='number' placeholder='Quantity' value={quantity} onChange={(e) => setQuantity(e.target.value)}/>
+                <input name='quantity' type='number' placeholder='Quantity' value={quantity} onChange={(e) => setQuantity(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base"/>
             </label>
 
             <label>
-                <input name='purchasePrice' type='number' placeholder='Purchase Price' value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)}/>
+                <input name='purchasePrice' type='number' placeholder='Purchase Price' value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base"/>
             </label>
 
-            <button type='submit'>Add Stock</button>
+            <button type='submit' className="bg-blue-600 hover:bg-blue-500 text-white text-base font-semibold py-[10px] px-[20px] rounded border-none w-full sm:w-auto">Add Stock</button>
         </form>
      </>
     )   
