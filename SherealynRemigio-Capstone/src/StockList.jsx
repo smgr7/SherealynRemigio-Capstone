@@ -2,12 +2,13 @@ import { useState, useEffect, useContext, useCallback } from "react";
 import StockContext from "./contexts/StockContext";
 // import './StockListStyling.css'
 
-// const API_KEY = "VEONLV84U8XAJK1U";
+const API_KEY = "VEONLV84U8XAJK1U";
 
-//const fetchCurrentPrice = async (symbol, API_KEY)
-const fetchCurrentPrice = async (symbol) => {
+//const fetchCurrentPrice = async (symbol)
+
+const fetchCurrentPrice = async (symbol, API_KEY) => {
     try {
-        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`)
+        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
         const data = await response.json();
 
         const quote = data['Global Quote'];
@@ -31,8 +32,8 @@ function StockList() {
         const prices = {};
 
         for (const stock of stocks) {
-            // const price = await fetchCurrentPrice(stock.symbol, API_KEY);
-            const price = await fetchCurrentPrice(stock.symbol);
+            const price = await fetchCurrentPrice(stock.symbol, API_KEY);
+            // const price = await fetchCurrentPrice(stock.symbol);
             if (price) {
                 prices[stock.symbol] = price;
             }

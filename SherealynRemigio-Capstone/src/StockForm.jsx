@@ -2,10 +2,11 @@ import { useContext, useState } from 'react';
 // import './StockFormStyling.css'
 import StockContext from './contexts/StockContext';
 
-//const fetchCurrentPrice = async (symbol, API_KEY)
-const fetchCurrentPrice = async (symbol) => {
+//const fetchCurrentPrice = async (symbol)
+
+const fetchCurrentPrice = async (symbol, API_KEY) => {
     try {
-        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`)
+        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
         
         const data = await response.json();
 
@@ -29,7 +30,7 @@ function StockForm() {
 
     const {addStock} = useContext(StockContext);
 
-    // const API_KEY = "VEONLV84U8XAJK1U";
+    const API_KEY = "VEONLV84U8XAJK1U";
 
     const resetForm = () => {
         setStockSymbol('');
@@ -45,8 +46,8 @@ function StockForm() {
             return;
         }
 
-        // const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase(), API_KEY);
-        const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase());
+        const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase(), API_KEY);
+        //const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase());
 
 
         if (!currentPrice) {
