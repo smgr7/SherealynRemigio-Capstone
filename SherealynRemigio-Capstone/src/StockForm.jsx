@@ -1,26 +1,22 @@
 import { useContext, useState } from 'react';
-// import './StockFormStyling.css'
 import StockContext from './contexts/StockContext';
 
-//const fetchCurrentPrice = async (symbol)
-
+//const fetchCurrentPrice = async (symbol)  
 const fetchCurrentPrice = async (symbol, API_KEY) => {
-    try {
-        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
+    
+    //const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`);
+    const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
         
-        const data = await response.json();
+    const data = await response.json();
 
-        const quote = data['Global Quote'];
+    const quote = data['Global Quote'];
 
-        if (!quote || !quote['05. price']) {
-            return null;
-        }
-        return parseFloat(quote['05. price']);
+    if (!quote || !quote['05. price']) {
+        throw new Error('Invalid stock symbol or failed to fetch a price');
     }
-    catch (error) {
-        return null;
-    }
+    return parseFloat(quote['05. price']);
 }
+    
 
 function StockForm() {
 
@@ -28,9 +24,12 @@ function StockForm() {
     const [quantity, setQuantity] = useState('');
     const [purchasePrice, setPurchasePrice] = useState('');
 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
     const {addStock} = useContext(StockContext);
 
-    const API_KEY = "VEONLV84U8XAJK1U";
+    const API_KEY = import.meta.env.VITE_API_KEY;
 
     const resetForm = () => {
         setStockSymbol('');
@@ -42,34 +41,38 @@ function StockForm() {
         e.preventDefault();
 
         if(!stockSymbol || !quantity || !purchasePrice) {
-            alert('Please fill in all fields');
+            setError('Please fill in all fields');
             return;
         }
 
-        const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase(), API_KEY);
-        //const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase());
+        setLoading(true);
+        setError('');
 
+        try{
+            const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase(), API_KEY);
+            //const currentPrice = await fetchCurrentPrice(stockSymbol.toUpperCase());
 
-        if (!currentPrice) {
-            alert('Invalid stock symbol');
-            resetForm();
-            return;
-        }
+            const newStock = {
+                symbol: stockSymbol.toUpperCase(),
+                quantity: Number(quantity),
+                purchasePrice: Number(purchasePrice),
+                currentPrice,
+            };
 
-        const newStock = {
-            symbol: stockSymbol.toUpperCase(),
-            quantity: Number(quantity),
-            purchasePrice: Number(purchasePrice),
-            currentPrice,
-        };
-
-        addStock(newStock);
-        resetForm();
-        
+            addStock(newStock);
+            resetForm();   
+        } catch (err) {
+            setError(err.message || 'Failed to fetch stock data');
+        } finally {
+            setLoading(false);
+        }  
     }
 
     return (
     <>
+        {loading && <p className="loading">Fetching stock price...</p>}
+        {error && <p className="error">{error}</p>}
+
          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-[20px] sm:gap-[10px] w-full sm:w-auto mx-auto">
             <label>
                 <input name='stockSymbol' type='text' placeholder='Stock Symbol' value={stockSymbol} onChange={(e) => setStockSymbol(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base"/>

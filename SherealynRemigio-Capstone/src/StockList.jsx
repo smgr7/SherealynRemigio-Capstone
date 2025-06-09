@@ -1,26 +1,22 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import StockContext from "./contexts/StockContext";
-// import './StockListStyling.css'
 
-const API_KEY = "VEONLV84U8XAJK1U";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
-//const fetchCurrentPrice = async (symbol)
-
+//const fetchCurrentPrice = async (symbol) 
 const fetchCurrentPrice = async (symbol, API_KEY) => {
-    try {
-        const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
-        const data = await response.json();
+    
+    //const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`);
+    const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
+        
+    const data = await response.json();
 
-        const quote = data['Global Quote'];
+    const quote = data['Global Quote'];
 
-        if (!quote || !quote['05. price']) {
-            return null;
-        }
-        return parseFloat(quote['05. price']);
+    if (!quote || !quote['05. price']) {
+        throw new Error('Invalid stock symbol or failed to fetch a price');
     }
-    catch (error) {
-        return null;
-    }
+    return parseFloat(quote['05. price']);
 }
 
 function StockList() {
@@ -28,17 +24,24 @@ function StockList() {
     const {stocks} = useContext(StockContext);
     const [updatedPrices, setUpdatedPrices] = useState({});
 
+    const [loading, setLoading] = useState(false);
+
     const refreshPrices = useCallback(async() => {
+        setLoading(true);
+
         const prices = {};
 
         for (const stock of stocks) {
-            const price = await fetchCurrentPrice(stock.symbol, API_KEY);
-            // const price = await fetchCurrentPrice(stock.symbol);
-            if (price) {
+            try {
+                const price = await fetchCurrentPrice(stock.symbol, API_KEY);
+                //const price = await fetchCurrentPrice(stock.symbol);
                 prices[stock.symbol] = price;
-            }
+            } catch (error) {
+                console.error(`Failed to fetch price for ${stock.symbol}:`, error);
+            } 
         }
         setUpdatedPrices(prices);
+        setLoading(false);
     }, [stocks]);
 
     useEffect(() => {
