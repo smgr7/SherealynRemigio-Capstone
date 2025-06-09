@@ -7,3 +7,13 @@ body {
   background-color: oklch(27.8% 0.033 256.848);
 }
 
+.error {
+  color: oklch(63.7% 0.237 25.331);
+  font-weight: 500;
+}
+
+.loading {
+  color: oklch(94.5% 0.129 101.54);
+  font-weight: 500;
+}
+
