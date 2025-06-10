@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import StockContext from './contexts/StockContext';
 
-//const fetchCurrentPrice = async (symbol)  
+//const fetchCurrentPrice = async (symbol) 
 const fetchCurrentPrice = async (symbol, API_KEY) => {
     
     //const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`);
