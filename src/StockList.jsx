@@ -49,7 +49,7 @@ function StockList() {
     }, [refreshPrices]);
 
     return (
-        <div className="flex flex-col bg-[#f5faff] rounded overflow-x-auto p8">
+        <div className="flex flex-col bg-[#f5faff] rounded overflow-x-auto p-8">
             {stocks.length === 0? (
                 <p className="p-4">No stocks added yet.</p>
             ) : (
@@ -72,12 +72,12 @@ function StockList() {
                                     const profitLoss = (currentPrice - stock.purchasePrice) * stock.quantity;
                                         return (
                                             <tr key={index}
-                                                className="odd:bg-blue-50 even:bg-white">
+                                                className="odd:bg-blue-50 even:bg-white text-gray-800">
                                                 {/* <td style={{fontWeight: "bold"}}>{stock.symbol}</td> */}
-                                                <td className="p-4 font-bold border-b border-gray-200 text-grey-800 text-sm sm:text-base">{stock.symbol}</td>
-                                                <td className="p-4 border-b border-gray-200 text-grey-800 text-sm sm:text-base">{stock.quantity}</td>
-                                                <td className="p-4 border-b border-gray-200 text-grey-800 text-sm sm:text-base">${stock.purchasePrice.toFixed(2)}</td>
-                                                <td className="p-4 border-b border-gray-200 text-grey-800 text-sm sm:text-base">${currentPrice.toFixed(2)}</td>
+                                                <td className="p-4 font-bold border-b border-gray-200 text-gray-800 text-sm sm:text-base">{stock.symbol}</td>
+                                                <td className="p-4 border-b border-gray-200 text-gray-800 text-sm sm:text-base">{stock.quantity}</td>
+                                                <td className="p-4 border-b border-gray-200 text-gray-800 text-sm sm:text-base">${stock.purchasePrice.toFixed(2)}</td>
+                                                <td className="p-4 border-b border-gray-200 text-gray-800 text-sm sm:text-base">${currentPrice.toFixed(2)}</td>
                                                 <td className={`p-4 font-bold ${profitLoss >= 0 ? "text-green-600" : "text-red-600"}`}
                                                 >
                                                 {profitLoss >= 0 ? "+" : "-"}${Math.abs(profitLoss).toFixed(2)}
@@ -90,13 +90,13 @@ function StockList() {
                     </div>
 
                     {/* Layout for smaller screens */}
-                    <div className="flex flex-col gap-4 sm:hidden bg-gray-800">
+                    <div className="flex flex-col gap-4 sm:hidden bg-gray-800 text-white">
                         {stocks.map((stock, index) => {
                             const currentPrice = updatedPrices[stock.symbol] ?? stock.currentPrice;
                             const profitLoss = (currentPrice - stock.purchasePrice) * stock.quantity;
 
                             return (
-                                <div key={index} className="border rounded-lg p-4 bg-blue-50 shadow-sm">
+                                <div key={index} className="border rounded-lg p-4 bg-blue-50 text-gray-800 shadow-sm">
                                     <div className="mb-1 font-bold">
                                         <span className="font-semibold">Stock Symbol:</span> {stock.symbol}
                                     </div>

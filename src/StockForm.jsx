@@ -75,15 +75,15 @@ function StockForm() {
 
          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-[20px] sm:gap-[10px] w-full sm:w-auto mx-auto">
             <label>
-                <input name='stockSymbol' type='text' placeholder='Stock Symbol' value={stockSymbol} onChange={(e) => setStockSymbol(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base"/>
+                <input name='stockSymbol' type='text' placeholder='Stock Symbol' value={stockSymbol} onChange={(e) => setStockSymbol(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base text-gray-800"/>
             </label>
 
             <label>
-                <input name='quantity' type='number' placeholder='Quantity' value={quantity} onChange={(e) => setQuantity(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base"/>
+                <input name='quantity' type='number' placeholder='Quantity' value={quantity} onChange={(e) => setQuantity(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base text-gray-800"/>
             </label>
 
             <label>
-                <input name='purchasePrice' type='number' placeholder='Purchase Price' value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base"/>
+                <input name='purchasePrice' type='number' placeholder='Purchase Price' value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="p-[9px] border border-gray-300 rounded text-base w-full sm:w-auto placeholder:text-base text-gray-800"/>
             </label>
 
             <button type='submit' className="bg-blue-600 hover:bg-blue-500 text-white text-base font-semibold py-[10px] px-[20px] rounded border-none w-full sm:w-auto">Add Stock</button>
