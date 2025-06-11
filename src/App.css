@@ -17,3 +17,7 @@ body {
   font-weight: 500;
 }
 
+input {
+  background-color: rgba(70, 90, 126, 0.4);
+}
+
