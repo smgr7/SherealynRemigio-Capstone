@@ -41,7 +41,16 @@ function StockForm() {
         e.preventDefault();
 
         if(!stockSymbol.trim()) {
-            setError('Stock symbol is required.');
+            if(stockSymbol === '') {
+                 setError('Stock symbol is required.')
+            } else {
+                setError('Stock symbol cannot contain only spaces.')
+            }
+            return;
+        }
+           
+        if (/\s/.test(stockSymbol)) {
+            setError('Stock symbol cannot contain spaces.');
             return;
         }
 
