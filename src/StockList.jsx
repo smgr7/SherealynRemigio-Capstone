@@ -3,11 +3,11 @@ import StockContext from "./contexts/StockContext";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-//const fetchCurrentPrice = async (symbol)
-const fetchCurrentPrice = async (symbol, API_KEY) => {
+//const fetchCurrentPrice = async (symbol, API_KEY)
+const fetchCurrentPrice = async (symbol) => {
     
-    //const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`);
-    const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
+    const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=demo`);
+    //const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol.toUpperCase()}&apikey=${API_KEY}`)
         
     const data = await response.json();
 
@@ -33,8 +33,9 @@ function StockList() {
 
         for (const stock of stocks) {
             try {
-                const price = await fetchCurrentPrice(stock.symbol, API_KEY);
-                //const price = await fetchCurrentPrice(stock.symbol);
+                //const price = await fetchCurrentPrice(stock.symbol, API_KEY);
+                const price = await fetchCurrentPrice(stock.symbol);
+
                 prices[stock.symbol] = price;
             } catch (error) {
                 console.error(`Failed to fetch price for ${stock.symbol}:`, error);
@@ -49,7 +50,7 @@ function StockList() {
     }, [refreshPrices]);
 
     return (
-        <div className="flex flex-col bg-[#f5faff] rounded overflow-x-auto p-8">
+        <div className="flex flex-col bg-[#f5faff] rounded overflow-x-auto p-0">
             {stocks.length === 0? (
                 <p className="p-4">No stocks added yet.</p>
             ) : (
